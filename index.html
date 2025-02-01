@@ -43,24 +43,36 @@ https://templatemo.com/tm-537-art-factory
             <div class="row">
                 <!-- ***** Contact Form Start ***** -->
                 <div class="col-lg-12 col-md-12 col-sm-12">
-                    <div class="contact-form">
+                    <div class="container mt-3">
                         <form id="contact" action="javascript:;" method="post">
                           <div class="row">
-                            <label for="" class="ml-2">TARGET</label>
+                            <label for="" class="ml-3 mt-3">LONG/SHORT</label>
                             <div class="col-md-12 col-sm-12">
-                                <input id="target" placeholder="target profit (eg: 3)" required="" class="contact-field">
+                                <select class="form-control" id="ls">
+                                    <option value="1" selected>LONG</option>
+                                    <option value="2">SHORT</option>
+                                </select>
                             </div>
-                            <label for="" class="ml-2">TP</label>
+                            <label for="" class="ml-3 mt-3">TARGET</label>
                             <div class="col-md-12 col-sm-12">
-                                <input id="tp" placeholder="tp price" required="" class="contact-field">
+                                <input id="target" placeholder="target profit (eg: 3)" required="" class="form-control">
                             </div>
-                            <label for="" class="ml-2">ENTRY</label>
+                            <label for="" class="ml-3 mt-3">ENTRY</label>
                             <div class="col-md-12 col-sm-12">
-                                <input id="entry" placeholder="entry price" required="" class="contact-field">
+                                <input id="entry" placeholder="entry price" required="" class="form-control">
+                            </div>
+                            <label for="" class="ml-3 mt-3">TP</label>
+                            <div class="col-md-12 col-sm-12">
+                                <input id="tp" placeholder="tp price" required="" class="form-control">
+                            </div>
+                            <div class="alert alert-danger ml-3 mt-3">
+                                <h5>
+                                    POSITION SIZE : <span id="pos">0</span>
+                                </h5>
                             </div>
                             <div class="col-lg-12">
                               <fieldset>
-                                <button type="submit" id="form-submit" class="main-button" onclick="calculate()">Calculate</button>
+                                <button type="submit" id="form-submit" class="btn btn-success mt-3" onclick="calculate()">Calculate</button>
                               </fieldset>
                             </div>
                           </div>
@@ -95,18 +107,27 @@ https://templatemo.com/tm-537-art-factory
             var target = $('#target').val();
             var entry = $('#entry').val();
             var tp = $('#tp').val();
-
+            var ls = $('#ls').val();
+            var short = false;
+            if(ls == 2){
+                short = true;
+            }
 
             if(target != '' && entry != '' && tp != ''){
-                var position_size = calc_position_size(target, entry, tp);
-                alert('position size : ' + position_size);
+                var position_size = calc_position_size(target, entry, tp, short);
+                $('#pos').html(position_size);
             }else{
                 alert('not complete');
             }
         }
 
-        function calc_position_size(target, entry, tp){
-            var position_size = target * entry / (tp - entry);
+        function calc_position_size(target, entry, tp, short = false){
+            var position_size = 0;
+            if( ! short){
+                position_size = target * entry / (tp - entry);
+            }else{
+                position_size = target * entry / (entry - tp);
+            }
             return position_size;
         }
     </script>
